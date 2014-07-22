@@ -35,18 +35,16 @@ App::after(function($request, $response)
 
 Route::filter('auth', function()
 {
-	if (Auth::guest())
-	{
-		if (Request::ajax())
-		{
-			return Response::make('Unauthorized', 401);
-		}
-		else
-		{
-			return Redirect::guest('login');
-		}
-	}
+    if (Auth::guest()) return Redirect::guest('login');
 });
+
+Route::filter('auth_admin', function()
+{
+    if (Auth::guest()) return Redirect::guest('login');
+    if (Auth::user()->admin != TRUE)
+        return Redirect::to('restricted');
+});
+
 
 
 Route::filter('auth.basic', function()
